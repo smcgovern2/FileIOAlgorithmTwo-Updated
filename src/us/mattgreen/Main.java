@@ -11,7 +11,8 @@ public class Main {
     private static Scanner keyboard = new Scanner(System.in);
     public final static FileOutput outFile = new FileOutput("SortedOutput.csv");
 
-    public static void main(String[] args) {
+
+    public static void main(String[] args) throws Exception {
         String line;
         String[] fields;
         int[] nums = new int[2];
@@ -31,12 +32,6 @@ public class Main {
         ArrayList<String[]> sorted = bubbleSort(toSort);
 
         for (String[] array : sorted) {
-            System.out.println(array[4]);
-        }
-
-
-
-        for (String[] array : sorted) {
             for(int i=0; i < array.length; i++){
                 if (i < array.length -1) {
                     outFile.fileWrite(array[i] + ",");
@@ -46,8 +41,43 @@ public class Main {
             }
         }
 
+        FileInput ratingsList = new FileInput("movie_rating.csv");
 
+
+
+
+        int[] ratingTallies = {0,0,0,0,0};
+        while (((line = ratingsList.fileReadLine()) != null)) {
+            String[] ratings = line.split(",");
+            switch(ratings[1]){
+                case "1":
+                    ratingTallies[0]++;
+                    break;
+                case "2":
+                    ratingTallies[1]++;
+                    break;
+                case "3":
+                    ratingTallies[2]++;
+                    break;
+                case "4":
+                    ratingTallies[3]++;
+                    break;
+                case "5":
+                    ratingTallies[4]++;
+                    break;
+                default:
+                    throw new Exception("Rating out of bounds");
+            }
+
+           }
+
+
+        System.out.format("%4s %8s \n", "Rating", "Count");
+        for (int i=0; i < ratingTallies.length; i++) {
+            System.out.format("%4d %8d \n", i + 1, ratingTallies[i]);
+        }
         outFile.fileClose();
+
 
 
     }
@@ -107,13 +137,10 @@ public class Main {
             fields = line.split(",");
             if (fields[0].compareTo(acct) > 0) {
                 done = true;
-                System.out.println("true");
             }
             else if (fields[0].equals(acct)) {
                 nums[0]++;
                 nums[1] += Integer.parseInt(fields[2]);
-
-                System.out.println(nums[0] + " " + nums[1]);
             }
 
         }
